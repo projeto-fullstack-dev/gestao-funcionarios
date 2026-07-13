@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: gestao-funcionarios-backend
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: gestao-funcionarios-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
