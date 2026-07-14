@@ -1,7 +1,7 @@
 package com.gestao.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,82 +11,99 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
+@Schema(description = "Vínculo de um funcionário com uma empresa")
 public class Vinculo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+  private Long id;
 
-    @NotBlank(message = "O nome da empresa é obrigatório")
-    @Column(nullable = false)
-    private String empresa;
+  @NotNull(message = "A empresa é obrigatória")
+  @ManyToOne
+  @JoinColumn(name = "empresa_id", nullable = false)
+  private Empresa empresa;
 
-    @NotBlank(message = "A matrícula é obrigatória")
-    @Column(nullable = false, unique = true)
-    private String matricula;
+  @Column(nullable = false)
+  @Schema(description = "Indica se este é um vínculo ativo", example = "true")
+  private boolean ativo = true;
 
-    @ManyToOne
-    @JoinColumn(name = "funcionario_id", nullable = false)
-    @JsonBackReference
-    private Funcionario funcionario;
+  @NotBlank(message = "A matrícula é obrigatória")
+  @Pattern(regexp = "\\d+", message = "A matrícula deve conter apenas números")
+  @Column(nullable = false, unique = true)
+  private String matricula;
 
-    @NotNull(message = "O cargo é obrigatório")
-    @ManyToOne
-    @JoinColumn(name = "cargo_id", nullable = false)
-    private Cargo cargo;
+  @ManyToOne
+  @JoinColumn(name = "funcionario_id", nullable = false)
+  @JsonBackReference
+  private Funcionario funcionario;
 
-    @NotNull(message = "O departamento é obrigatório")
-    @ManyToOne
-    @JoinColumn(name = "departamento_id", nullable = false)
-    private Departamento departamento;
+  @NotNull(message = "O cargo é obrigatório")
+  @ManyToOne
+  @JoinColumn(name = "cargo_id", nullable = false)
+  private Cargo cargo;
 
-    public Long getId() {
-        return id;
-    }
+  @NotNull(message = "O departamento é obrigatório")
+  @ManyToOne
+  @JoinColumn(name = "departamento_id", nullable = false)
+  private Departamento departamento;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public String getEmpresa() {
-        return empresa;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public void setEmpresa(String empresa) {
-        this.empresa = empresa;
-    }
+  public Empresa getEmpresa() {
+    return empresa;
+  }
 
-    public String getMatricula() {
-        return matricula;
-    }
+  public void setEmpresa(Empresa empresa) {
+    this.empresa = empresa;
+  }
 
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
-    }
+  public boolean isAtivo() {
+    return ativo;
+  }
 
-    public Funcionario getFuncionario() {
-        return funcionario;
-    }
+  public void setAtivo(boolean ativo) {
+    this.ativo = ativo;
+  }
 
-    public void setFuncionario(Funcionario funcionario) {
-        this.funcionario = funcionario;
-    }
+  public String getMatricula() {
+    return matricula;
+  }
 
-    public Cargo getCargo() {
-        return cargo;
-    }
+  public void setMatricula(String matricula) {
+    this.matricula = matricula;
+  }
 
-    public void setCargo(Cargo cargo) {
-        this.cargo = cargo;
-    }
+  public Funcionario getFuncionario() {
+    return funcionario;
+  }
 
-    public Departamento getDepartamento() {
-        return departamento;
-    }
+  public void setFuncionario(Funcionario funcionario) {
+    this.funcionario = funcionario;
+  }
 
-    public void setDepartamento(Departamento departamento) {
-        this.departamento = departamento;
-    }
+  public Cargo getCargo() {
+    return cargo;
+  }
+
+  public void setCargo(Cargo cargo) {
+    this.cargo = cargo;
+  }
+
+  public Departamento getDepartamento() {
+    return departamento;
+  }
+
+  public void setDepartamento(Departamento departamento) {
+    this.departamento = departamento;
+  }
 }

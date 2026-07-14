@@ -1,12 +1,20 @@
-import { Building2, IdCard, Users } from 'lucide-react'
+import { Building, Building2, IdCard, LogOut, Users } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '../context/authContext'
+import './Sidebar.css'
 
 export default function Sidebar() {
+  const { logout } = useAuth()
   return (
     <aside className="sidebar">
       <div className="logo">X</div>
 
       <nav className="menu">
+        <NavLink to="/empresas" className="menu-item">
+          <Building size={34} />
+          <span>Empresa</span>
+        </NavLink>
+
         <NavLink to="/funcionarios" className="menu-item">
           <Users size={34} />
           <span>Funcionário</span>
@@ -22,6 +30,7 @@ export default function Sidebar() {
           <span>Departamento</span>
         </NavLink>
       </nav>
+      <button className="logout-button" onClick={logout} title="Sair"><LogOut size={24} /><span>Sair</span></button>
     </aside>
   )
 }

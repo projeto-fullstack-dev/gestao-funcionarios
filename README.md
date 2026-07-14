@@ -1,133 +1,139 @@
-# Sistema de Gestão de Funcionários
+# Gestão de Funcionários
 
-Sistema web para gerenciamento de funcionários, cargos, departamentos e vínculos empresariais.
+Sistema para organizar funcionários e seus vínculos com empresas.
 
-O projeto foi desenvolvido como desafio técnico Full Stack, contemplando backend, frontend, banco de dados, validações, filtros, paginação, relatórios, documentação da API e execução via Docker.
+Além dos funcionários, o sistema mantém os cadastros de empresas, cargos e departamentos. Esses dados são usados na criação dos vínculos: cada vínculo relaciona uma matrícula a uma empresa, um cargo e um departamento.
 
----
+O projeto tem um backend em Spring Boot, um frontend em React e usa MySQL. O ambiente completo pode ser iniciado com Docker Compose.
 
-## Tecnologias utilizadas
+## Rodando o projeto
 
-### Backend
+Você precisa ter o Docker Desktop aberto. Na raiz do projeto, execute:
 
-- Java 21
-- Spring Boot
-- Spring Web
-- Spring Data JPA
-- Bean Validation
-- H2 Database
-- Swagger/OpenAPI
-- Maven
+```bash
+docker compose up -d --build
+```
 
-### Frontend
+Na primeira execução pode demorar um pouco, pois as imagens e dependências serão baixadas. Para acompanhar a inicialização:
 
-- React
-- Vite
-- JavaScript
-- Axios
-- React Router DOM
-- Lucide React
-- CSS
+```bash
+docker compose logs -f
+```
 
-### Execução
+Quando os três serviços estiverem saudáveis, acesse:
 
-- Docker
-- Docker Compose
+- Aplicação: http://localhost:5173
+- Swagger: http://localhost:8080/swagger-ui.html
 
----
+O acesso inicial é:
 
-## Funcionalidades
+```text
+Usuário: login
+Senha: pass
+```
 
-### Funcionários
+Para verificar os containers:
 
-- Cadastro de funcionários
-- Edição de funcionários
-- Exclusão de funcionários
-- Listagem com paginação
-- Filtros por nome, CPF, matrícula, empresa, cargo e departamento
-- Cadastro de vínculos empresariais
-- Relatório CSV
+```bash
+docker compose ps
+```
 
-### Vínculos empresariais
+Para encerrar o ambiente:
 
-Cada funcionário pode possuir um ou mais vínculos.
+```bash
+docker compose down
+```
 
-Cada vínculo possui:
+Os dados do MySQL ficam salvos em um volume. Caso queira apagar o banco e começar do zero, use `docker compose down -v`.
 
-- Empresa
-- Matrícula
-- Cargo
-- Departamento
+## O que existe no sistema
 
-### Cargos
+O frontend possui telas para:
 
-- Cadastro de cargos
-- Edição de cargos
-- Exclusão de cargos
-- Listagem com paginação
-- Filtros por descrição e código
-- Relatório CSV
+- entrar e sair do sistema;
+- listar, filtrar, cadastrar, editar e excluir funcionários;
+- cadastrar empresas, cargos e departamentos;
+- adicionar um ou mais vínculos a cada funcionário;
+- validar CPF e CNPJ, incluindo máscara e dígitos verificadores;
+- visualizar erros diretamente nas listagens e formulários;
+- utilizar o sistema em telas desktop e mobile.
 
-### Departamentos
+As rotas da API são protegidas por JWT. Depois do login, o frontend inclui o token automaticamente nas requisições e encerra a sessão quando ele expira ou deixa de ser válido.
 
-- Cadastro de departamentos
-- Edição de departamentos
-- Exclusão de departamentos
-- Listagem com paginação
-- Filtros por descrição e código
-- Relatório CSV
+## Usando o Swagger
 
----
+O Swagger está em http://localhost:8080/swagger-ui.html.
 
-## Regras de negócio
+Para chamar os endpoints protegidos:
 
-- CPF de funcionário não pode ser duplicado.
-- CPF deve seguir o formato `000.000.000-00`.
-- Código de cargo não pode ser duplicado.
-- Código de departamento não pode ser duplicado.
-- Um funcionário precisa possuir pelo menos um vínculo empresarial.
-- Cada vínculo precisa possuir empresa, matrícula, cargo e departamento.
-- Matrícula de vínculo não pode ser duplicada.
-- Cargo e departamento precisam estar previamente cadastrados para serem utilizados em um vínculo.
+1. Abra `POST /api/auth/login`.
+2. Use `login` e `pass` no corpo da requisição.
+3. Copie o campo `token` da resposta.
+4. Clique em **Authorize** e cole o token.
 
----
+A especificação OpenAPI em JSON está disponível em http://localhost:8080/api-docs.
 
-## Estrutura do projeto
+## Rodando o frontend fora do Docker
 
-```txt
-gestao-funcionarios/
-│
-├── backend/
-│   ├── Dockerfile
-│   ├── pom.xml
-│   ├── mvnw
-│   ├── mvnw.cmd
-│   └── src/
-│       ├── main/
-│       │   ├── java/com/gestao/backend/
-│       │   │   ├── config/
-│       │   │   ├── controller/
-│       │   │   ├── exception/
-│       │   │   ├── model/
-│       │   │   ├── repository/
-│       │   │   └── service/
-│       │   │
-│       │   └── resources/
-│       │       └── application.properties
-│       │
-│       └── test/
-│
-├── frontend/
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── index.html
-│   └── src/
-│       ├── components/
-│       ├── pages/
-│       ├── services/
-│       ├── App.jsx
-│       ├── main.jsx
-│       └── index.css
-│
-├── docker-compose.yml
-└── README.md
+Com o backend e o MySQL ativos:
+
+```bash
+cd frontend
+npm ci
+npm run dev
+```
+
+Outros comandos úteis:
+
+```bash
+npm run lint
+npm run build
+```
+
+## Testes com Cypress
+
+Os testes E2E cobrem login, sessão, validações, erros de listagem, responsividade e o cadastro de empresas.
+
+Com a aplicação e a API em execução, entre na pasta do frontend:
+
+```bash
+cd frontend
+```
+
+Para abrir o Cypress e acompanhar os testes no navegador:
+
+```bash
+npm run test:e2e:open
+```
+
+Escolha **E2E Testing**, selecione um navegador e clique no cenário que deseja executar.
+
+Para executar todos os testes sem abrir a interface:
+
+```bash
+npm run test:e2e
+```
+
+## Testes do backend
+
+No Windows:
+
+```powershell
+cd backend
+.\mvnw.cmd verify
+```
+
+O relatório de cobertura é gerado em `backend/target/site/jacoco/index.html`.
+
+## Configuração
+
+Os valores usados pelo Docker estão no arquivo `.env.example`. Se precisar trocar banco, senha, duração do token ou endereço da API, copie esse arquivo para `.env` e ajuste os valores.
+
+As principais tecnologias usadas são:
+
+- Java 21 e Spring Boot;
+- Spring Security e JWT;
+- Spring Data JPA, Flyway e MySQL;
+- React, Redux Toolkit e React Hook Form;
+- Cypress, JUnit e JaCoCo;
+- Docker e Docker Compose.

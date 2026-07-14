@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+ENV CYPRESS_INSTALL_BINARY=0
+RUN npm ci
 
 COPY . .
 

@@ -1,0 +1,92 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  left: 104px;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 40;
+}
+
+.modal {
+  position: relative;
+  width: min(460px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 10px;
+  padding: 26px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25);
+}
+
+.modal h2 {
+  margin: 0 0 14px;
+  color: #347fc0;
+  font-size: 24px;
+}
+
+.modal p {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.modal-warning {
+  color: #c0392b !important;
+  font-weight: 700;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: none;
+  background: transparent;
+  color: #777;
+  cursor: pointer;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+
+.vinculo-modal {
+  width: min(680px, 100%);
+}
+
+.modal-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 28px 20px;
+  margin-top: 28px;
+}
+
+@media (max-width: 760px) {
+  .modal-overlay {
+    left: 0;
+  }
+
+  .modal-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 22px 16px;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-actions .large {
+    width: 100%;
+  }
+
+}

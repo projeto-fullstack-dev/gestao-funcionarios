@@ -1,0 +1,26 @@
+.pagination {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border-top: 1px solid #eee;
+}
+
+.pagination span {
+  color: #347fc0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+@media (max-width: 420px) {
+  .pagination {
+    gap: 8px;
+    padding: 14px 8px;
+  }
+
+  .pagination .outline-button {
+    padding: 0 10px;
+  }
+
+}
